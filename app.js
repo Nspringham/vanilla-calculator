@@ -1,29 +1,11 @@
 // JS Calculator 
 // Author: Nick Springham
 
-// calc numbers
-var oneBtn = document.getElementById('calc-one');
-var twoBtn = document.getElementById('calc-two');
-var threeBtn = document.getElementById('calc-three');
-var fourBtn = document.getElementById('calc-four');
-var fiveBtn = document.getElementById('calc-five');
-var sixBtn = document.getElementById('calc-six');
-var sevenBtn = document.getElementById('calc-seven');
-var eightBtn = document.getElementById('calc-eight');
-var nineBtn = document.getElementById('calc-nine');
-var zeroBtn = document.getElementById('calc-zero');
-
-// calc operators
-var divideBtn = document.getElementById('calc-divide');
-var multiplyBtn = document.getElementById('calc-multiply');
-var subtractBtn = document.getElementById('calc-subtract');
-var addBtn = document.getElementById('calc-add');
-
 // calc functions
 var clearBtn = document.getElementById('calc-clear');
 var backspaceBtn = document.getElementById('calc-backspace');
 var decimalBtn = document.getElementById('calc-decimal');
-var calculateBtn = document.getElementById('calc-calculate');
+
 
 // calc display
 var displayValElement = document.getElementById('display-val');
@@ -43,9 +25,78 @@ var updateDisplayVal = (clickObj) => {
   displayValElement.innerText = displayVal;
 }
 
+var performOperation = (clickObj) => {
+  var operator = clickObj.target.innerText;
+
+  switch (operator) {
+    case '+':
+      pendingVal = displayVal;
+      displayVal = '0';
+      displayValElement.innerText = displayVal;
+      evalStringArray.push(pendingVal);
+      evalStringArray.push('+');
+      break;
+    case '−':
+      pendingVal = displayVal;
+      displayVal = '0';
+      displayValElement.innerText = displayVal;
+      evalStringArray.push(pendingVal);
+      evalStringArray.push('-');
+      break;
+    case '×':
+      pendingVal = displayVal;
+      displayVal = '0';
+      displayValElement.innerText = displayVal;
+      evalStringArray.push(pendingVal);
+      evalStringArray.push('*');
+      break;
+    case '÷':
+      pendingVal = displayVal;
+      displayVal = '0';
+      displayValElement.innerText = displayVal;
+      evalStringArray.push(pendingVal);
+      evalStringArray.push('/');
+      break;
+    case '=':
+      evalStringArray.push(displayVal);
+      var evaluation = eval(evalStringArray.join(' '));
+      displayVal = evaluation + '';
+      displayValElement.innerText = displayVal;
+      evalStringArray = [];
+      break;
+
+    default:
+      break;
+  }
+}
+
 for (let i = 0; i < calcNumBtns.length; i++) {
   calcNumBtns[i].addEventListener('click', updateDisplayVal, false);
 }
-// for (let i = 0; i < calcOperatorBtns.length; i++) {
-//   calcOperatorBtns[i].addEventListener('click', performOperation, false);
-// }
+for (let i = 0; i < calcOperatorBtns.length; i++) {
+  calcOperatorBtns[i].addEventListener('click', performOperation, false);
+}
+
+clearBtn.onclick = () => {
+  displayVal = '0';
+  pendingVal = undefined;
+  evalStringArray = [];
+  displayValElement.innerHTML = displayVal;
+}
+
+backspaceBtn.onclick = () => {
+  let lengthOfDisplayVal = displayVal.length;
+  displayVal = displayVal.slice(0, lengthOfDisplayVal - 1);
+
+  if(displayVal === '')
+    displayVal = '0';
+
+  displayValElement.innerText = displayVal;
+}
+
+decimalBtn.onclick = () => {
+  if(!displayVal.includes('.'))
+    displayVal += '.';
+  displayValElement.innerText = displayVal;
+}
+
